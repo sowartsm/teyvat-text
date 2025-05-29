@@ -1,0 +1,7 @@
+.header{
+    font-family: 'HYWenHei-85W', sans-serif;
+    display: flex;
+    justify-content: center;
+    background-color: #33333300;
+    color: white;
+}
