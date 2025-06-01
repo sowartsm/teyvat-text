@@ -15,10 +15,11 @@ function App() {
 
   const [isBold, setIsBold] = useState(false);
   const [isItalic, setIsItalic] = useState(false);
-  const [isSaved, setIsSaved] = useState(false);
   const [isColorEnabled, setIsColorEnabled] = useState(false);
-  const [sizeValue, setSizeValue] = useState('');
   const [color, setColor] = useState('#ff0073');
+  const [sizeValue, setSizeValue] = useState('');
+  const [limitSignature, setLimitSignature] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
 
 
   let formatted = text;
@@ -29,7 +30,7 @@ function App() {
   const wrappedText = formatted;
 
   const wrappedLength = wrappedText.length;
-  const maxLength = 80;
+  const maxLength = limitSignature ? 45 : 80;
   const isTooLong = wrappedLength > maxLength;
 
   const { color: previewColor, content: previewContent } = parseColoredText(wrappedText);
@@ -172,6 +173,7 @@ function App() {
                     className={`format-button ${isColorEnabled ? 'active' : ''}`}
                     onClick={() => setIsColorEnabled(!isColorEnabled)}
                   >
+
                     🎨
                   </button>
                   <input
@@ -188,6 +190,14 @@ function App() {
                     onChange={(e) => setSizeValue(e.target.value)}
                     style={{ width: '60px', paddingLeft: '5px', borderRadius: '5px' }}
                   />
+                  <button
+                    className={`format-button ${limitSignature ? 'active' : ''}`}
+                    onClick={() => setLimitSignature(prev => !prev)}
+                    title="Toggle Signature Mode"
+                  >
+                    Sig
+                  </button>
+
                 </div>
               </div>
               <textarea
@@ -213,8 +223,11 @@ function App() {
 
 
               {isTooLong && (
-                <p className="warning-text">⚠ Output exceeds 80 characters ({wrappedLength}/80)</p>
+                <p className="warning-text">
+                  ⚠ Output exceeds {maxLength} characters ({wrappedLength}/{maxLength})
+                </p>
               )}
+
               <div className="button-group">
                 <button onClick={() => copyToClipboard(wrappedText, 'main')} disabled={isTooLong || !text.trim()}>
                   {copiedIndexes.has('main') ? 'Copied!' : 'Copy'}
